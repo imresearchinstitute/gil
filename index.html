@@ -91,7 +91,7 @@
                  document.mainscreen.BasicTextArea4.value = final_transcript;
                  final_transcript = '';
                  recognition.stop();
-                 oddroutine();
+                 oddroutine(0);
               }
            }
 
@@ -125,12 +125,13 @@
            }
 	}
 
-        function oddroutine() {
+        function oddroutine(s) {
             uinput = document.mainscreen.BasicTextArea4.value;
 
             if (isrunning == 1) {
                 return
             }
+
             isrunning = 1;
             document.mainscreen.BasicTextArea1.focus();
 //            document.mainscreen.BasicTextArea4.focus();
@@ -144,7 +145,11 @@
                 fResp();
                 document.getElementById('iContext').value = cContext.join(',');
             } else {
-                fFirst();
+               if (s!=1) { 
+                  fFirst(); 
+               } else {
+                  soutput = "Hello.";
+               }
                 document.getElementById('iContext').value = '';
             }
             if (!soutput.match(".*[\.\!\?\'\"][ ]*$")) {
@@ -12460,7 +12465,7 @@
 </head>
 
    <body onload="init1()">
-      <form name="mainscreen" onkeypress = "if(event.keyCode == 13) {oddroutine();return false}">
+      <form name="mainscreen" onkeypress = "if(event.keyCode == 13) {oddroutine(0);return false}">
          <table align="center">
             <tr>
                <td>
@@ -12511,7 +12516,7 @@
                   <div class="mid" id="div3">
                      <center>
                      <!--input id=oddbutton  class="button" type="button" value="Brain Dump" name="odd_button"  onClick="oddroutine()"-->
-                     <input id=oddbutton  class="button" type="button" value="Start" name="odd_button"  onClick="oddroutine()">
+                     <input id=oddbutton  class="button" type="button" value="Start" name="odd_button"  onClick="oddroutine(1)">
                   </div>
                   <div class="mid" id="div4" style="DISPLAY: none" >
                      <center>
@@ -12535,7 +12540,7 @@
                   </div>
                   <div class="mid" id="div6" style="DISPLAY: none" >
                      <center>
-                     <input id=oddbutton  class="button" type="button" value="Enter" name="odd_button"  onClick="oddroutine()">
+                     <input id=oddbutton  class="button" type="button" value="Enter" name="odd_button"  onClick="oddroutine(0)">
                   </div>
                </td>
             </tr>
