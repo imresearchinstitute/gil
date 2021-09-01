@@ -62,6 +62,7 @@
         sArray = new Array();
         noRsp = new Array();
         cConv = "";
+        final_transcript = '';
 
         nm = "OUTPUT";
         soutput = "";
@@ -70,6 +71,32 @@
         txt1 = "";
 
         ///////////////////////////////////////////////////
+        
+        if (('webkitSpeechRecognition' in window)) {
+           var recognition = new webkitSpeechRecognition();
+           recognition.continuous = false;
+           recognition.interimResults = false;
+           recognition.lang = 'en-US';
+        
+           recognition.onresult = function(event) {
+              for (var i = event.resultIndex; i < event.results.length; ++i) {
+                 if (event.results[i].isFinal) {
+                    final_transcript += event.results[i][0].transcript;
+                 } 
+              }
+           }
+
+           recognition.onend = function() {
+              if (final_transcript) {
+                 document.mainscreen.BasicTextArea4.value = final_transcript;
+                 final_transcript = '';
+                 recognition.stop();
+                 oddroutine();
+              }
+           }
+
+//           recognition.start();
+        }
 
         function logIt(logTxt) {
             urlStr = "http://keanorama.freeshell.org/kl.cgi?";
@@ -148,7 +175,7 @@
         function u1() {
             if (idx < soutput.length) {
                 if (idx == 0) {
-                    wait(800 + Math.ceil(900 * Math.random()))
+                    wait(800 + Math.ceil(900 * Math.random()));
                     var msg = new SpeechSynthesisUtterance(soutput);
                     window.speechSynthesis.speak(msg);
                 };
@@ -159,12 +186,19 @@
                 idx++;
                 tid = setTimeout("u1()", Math.ceil(110 * Math.random()));
             } else {
+
+                document.getElementById("div3").style.display = 'none';
+                document.getElementById("div4").style.display = 'block';
+                document.getElementById("div5").style.display = 'none';
+                document.getElementById("div6").style.display = 'block';
+
                 isrunning = 0;
                 //      document.mainscreen.BasicTextArea1.value += "\r\n\r\n";
                 document.mainscreen.BasicTextArea1.value = txt1 + "\r\n\r\n";
                 document.mainscreen.BasicTextArea4.focus();
                 document.mainscreen.BasicTextArea4.style.backgroundColor = "#ffffff";
                 clearTimeout(tid);
+                recognition.start();
             }
         }
 
@@ -342,10 +376,14 @@
         function ShowHide() {
             document.getElementById("div1").style.display = 'none';
             document.getElementById("div2").style.display = 'block';
-            document.getElementById("div3").style.display = 'none';
-            document.getElementById("div4").style.display = 'block';
-            document.getElementById("div5").style.display = 'none';
-            document.getElementById("div6").style.display = 'block';
+//            document.getElementById("div3").style.display = 'none';
+//            document.getElementById("div4").style.display = 'block';
+//            document.getElementById("div5").style.display = 'none';
+//            document.getElementById("div6").style.display = 'block';
+            document.getElementById("div3").style.display = 'block';
+            document.getElementById("div4").style.display = 'none';
+            document.getElementById("div5").style.display = 'block';
+            document.getElementById("div6").style.display = 'none';
 //            document.getElementById("div7").style.display = 'none';
             document.getElementById("div8").style.display = 'block';
             document.mainscreen.BasicTextArea4.focus();
@@ -7214,7 +7252,7 @@
 [ "2479", "Hey man. whats up?", "0" ],
 [ "2480", "Its me.", "0" ],
 [ "2481", "Time to reboot.", "0" ],
-[ "2482", "Im not Gil. Youre Kilgore.", "0" ],
+[ "2482", "Im not Gil. Youre Gil.", "0" ],
 [ "2483", "Im glad we are in agreement.", "0" ],
 [ "2484", "It makes sense to me.", "0" ],
 [ "2485", "Can you play me some music now?", "0" ],
@@ -12417,6 +12455,7 @@
 
             ShowHide();
         }
+
     </script>
 </head>
 
@@ -12471,11 +12510,12 @@
                <td>
                   <div class="mid" id="div3">
                      <center>
-                     <input id=oddbutton  class="button" type="button" value="Brain Dump" name="odd_button"  onClick="oddroutine()">
+                     <!--input id=oddbutton  class="button" type="button" value="Brain Dump" name="odd_button"  onClick="oddroutine()"-->
+                     <input id=oddbutton  class="button" type="button" value="Start" name="odd_button"  onClick="oddroutine()">
                   </div>
                   <div class="mid" id="div4" style="DISPLAY: none" >
                      <center>
-                     <input type=text name="BasicTextArea4" size=70 rows="1" cols="75" style="color: blue; font-family: arial">
+                     <input type=text name="BasicTextArea4" size=70 rows="1" cols="75" style="color: blue; font-family: arial" x-webkit-speech>
                      <!--textarea name="BasicTextArea4" rows="1" cols="75" style="color: blue; font-family: arial"></textarea-->
                   </div>
                </td>
@@ -12502,4 +12542,4 @@
          </table>
       </form>
    </body>
-</html>
+//</html>
