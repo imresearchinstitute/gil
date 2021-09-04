@@ -103,7 +103,7 @@
         function logIt(logTxt) {
             urlStr = "http://keanorama.freeshell.org/kl.cgi?";
 
-            if(window.location.hostname.match(".*freeshell.*")) {
+            if(window.location.hostname.match(".*freeshell|github.*")) {
                xmlhttp = new XMLHttpRequest();
                xmlhttp.open("GET",urlStr+logTxt.replace(/ /g,'_'),true);
                xmlhttp.send();
